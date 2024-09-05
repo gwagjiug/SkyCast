@@ -1,0 +1,5 @@
+/* index.css 또는 App.css 파일 */
+body {
+  @apply flex items-center justify-center min-h-screen bg-gray-100;
+  margin: 0;
+}
