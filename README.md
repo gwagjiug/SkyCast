@@ -12,7 +12,7 @@ SkyCast는 사용자의 현재 위치를 기반으로 실시간 날씨 정보를
  * **OpenWeatherMap API**: 사용자의 현재 위치를 기준으로 실시간 날씨 정보를 가져옴.
  * **Unsplash API**: 날씨 상태에 따라 동적인 배경 이미지를 제공.
 
-* **CSS**: = tailwind 
+* **CSS**: `tailwind` 라이브러리 
   
 ## 기능 요약
 
