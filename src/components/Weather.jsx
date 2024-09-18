@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Sun,
   Cloud,
@@ -6,36 +6,47 @@ import {
   CloudSnow,
   CloudLightning,
   CloudFog,
-} from 'lucide-react';
-import forMattedDate from './forMattedDate';
-import '../styles/Weather.css'; // CSS 파일 import
+} from "lucide-react";
+import forMattedDate from "./forMattedDate";
+import "../styles/Weather.css"; // CSS 파일 import
 
 function Weather() {
   const [weatherData, setWeatherData] = useState(null);
   const [error, setError] = useState(null);
   const [location, setLocation] = useState(null);
-  const [backgroundImage, setBackgroundImage] = useState(''); // 배경 이미지 상태 추가
+  const [backgroundImage, setBackgroundImage] = useState(""); // 배경 이미지 상태 추가
   const apiKey = import.meta.env.VITE_WEATHER_KEY;
   const unsplashApiKey = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
 
   useEffect(() => {
     const getLocation = () => {
       if (!navigator.geolocation) {
-        setError('Geolocation is not supported by your browser');
+        setError("Geolocation is not supported by your browser");
         return;
       }
+
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setLocation({
             lat: position.coords.latitude,
             lon: position.coords.longitude,
+            accuracy: position.coords.accuracy, // 정확도 값 추가
           });
+
+          // 위치 정확도 로그
+          console.log("위치 정확도 (미터): ", position.coords.accuracy);
         },
-        () => {
-          setError('Unable to retrieve your location');
+        (error) => {
+          setError("Unable to retrieve your location");
+        },
+        {
+          enableHighAccuracy: true, // 정확도 향상을 위한 옵션
+          timeout: 10000, // 최대 대기 시간 (ms)
+          maximumAge: 0, // 캐시된 위치 정보 사용 안함
         }
       );
     };
+
     getLocation();
   }, []);
 
@@ -50,7 +61,7 @@ function Weather() {
         const weatherResponse = await fetch(weatherUrl);
 
         if (!weatherResponse.ok) {
-          throw new Error('Failed to fetch weather data');
+          throw new Error("Failed to fetch weather data");
         }
 
         const weatherData = await weatherResponse.json();
@@ -65,32 +76,32 @@ function Weather() {
 
   // 배경 이미지를 가져오는 함수
   const fetchBackgroundImage = async (weatherMain) => {
-    let query = '';
+    let query = "";
 
     switch (weatherMain) {
-      case 'Clear':
-        query = 'clear sky';
+      case "Clear":
+        query = "clear sky";
         break;
-      case 'Clouds':
-        query = 'cloudy sky';
+      case "Clouds":
+        query = "cloudy sky";
         break;
-      case 'Rain':
-      case 'Drizzle':
-        query = 'rain';
+      case "Rain":
+      case "Drizzle":
+        query = "rain";
         break;
-      case 'Thunderstorm':
-        query = 'thunderstorm';
+      case "Thunderstorm":
+        query = "thunderstorm";
         break;
-      case 'Snow':
-        query = 'snow sky';
+      case "Snow":
+        query = "snow sky";
         break;
-      case 'Mist':
-      case 'Fog':
-      case 'Haze':
-        query = 'foggy day';
+      case "Mist":
+      case "Fog":
+      case "Haze":
+        query = "foggy day";
         break;
       default:
-        query = 'weather';
+        query = "weather";
     }
 
     const url = `https://api.unsplash.com/photos/random?query=${encodeURIComponent(
@@ -110,11 +121,11 @@ function Weather() {
       if (data && data.urls && data.urls.full) {
         setBackgroundImage(data.urls.full);
       } else {
-        throw new Error('Unsplash API did not return the expected data.');
+        throw new Error("Unsplash API did not return the expected data.");
       }
     } catch (error) {
-      console.error('Error fetching image from Unsplash:', error);
-      setBackgroundImage('default-background-image-url.jpg'); // 대체 이미지 URL 설정
+      console.error("Error fetching image from Unsplash:", error);
+      setBackgroundImage("default-background-image-url.jpg"); // 대체 이미지 URL 설정
     }
   };
 
@@ -128,42 +139,42 @@ function Weather() {
 
   const getWeatherBackground = (weatherMain) => {
     switch (weatherMain) {
-      case 'Clear':
-        return 'bg-clear cloud'; // cloud을 추가하여 Unsplash에서 "clear sky" 검색
-      case 'Clouds':
-        return 'bg-clouds';
-      case 'Rain':
-      case 'Drizzle':
-        return 'bg-rainny day'; // rainny day로 검색
-      case 'Thunderstorm':
-        return 'bg-thunderstorm';
-      case 'Snow':
-        return 'bg-snow';
-      case 'Mist':
-      case 'Fog':
-      case 'Haze':
-        return 'bg-fog';
+      case "Clear":
+        return "bg-clear cloud"; // cloud을 추가하여 Unsplash에서 "clear sky" 검색
+      case "Clouds":
+        return "bg-clouds";
+      case "Rain":
+      case "Drizzle":
+        return "bg-rainny day"; // rainny day로 검색
+      case "Thunderstorm":
+        return "bg-thunderstorm";
+      case "Snow":
+        return "bg-snow";
+      case "Mist":
+      case "Fog":
+      case "Haze":
+        return "bg-fog";
       default:
-        return 'bg-default';
+        return "bg-default";
     }
   };
 
   const getWeatherIcon = (weatherMain) => {
     switch (weatherMain) {
-      case 'Clear':
+      case "Clear":
         return <Sun className="weather-icon sun" size={64} />;
-      case 'Clouds':
+      case "Clouds":
         return <Cloud className="weather-icon cloud" size={64} />;
-      case 'Rain':
-      case 'Drizzle':
+      case "Rain":
+      case "Drizzle":
         return <CloudRain className="weather-icon rain" size={64} />;
-      case 'Thunderstorm':
+      case "Thunderstorm":
         return <CloudLightning className="weather-icon lightning" size={64} />;
-      case 'Snow':
+      case "Snow":
         return <CloudSnow className="weather-icon snow" size={64} />;
-      case 'Mist':
-      case 'Fog':
-      case 'Haze':
+      case "Mist":
+      case "Fog":
+      case "Haze":
         return <CloudFog className="weather-icon fog" size={64} />;
       default:
         return <Sun className="weather-icon default" size={64} />;
